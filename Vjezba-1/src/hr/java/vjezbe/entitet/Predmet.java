@@ -8,13 +8,13 @@ public class Predmet {
 	private Profesor nositelj;
 	private Student[] studenti;
 
-	public Predmet(String sifra, String naziv, Integer brojEctsBodova, Profesor nositelj, Student[] studenti) {
+	public Predmet(String sifra, String naziv, Integer brojEctsBodova, Profesor nositelj, Integer brojStudenata) {
 		super();
 		this.sifra = sifra;
 		this.naziv = naziv;
 		this.brojEctsBodova = brojEctsBodova;
 		this.nositelj = nositelj;
-		this.studenti = studenti;
+		this.studenti = new Student[brojStudenata];
 	}
 
 	public String getSifra() {
