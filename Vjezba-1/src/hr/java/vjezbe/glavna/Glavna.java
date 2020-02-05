@@ -13,7 +13,7 @@ import hr.java.vjezbe.entitet.Student;
 public class Glavna {
 
 	private static final int BROJ_PROFESORA = 2;
-	private static final int BROJ_PREDMETA = 3;
+	private static final int BROJ_PREDMETA = 2;
 	public static final int BROJ_STUDENATA = 2;
 	private static final int BROJ_ISPITA = 1;
 	private static final String FORMAT_DATUM_VRIJEME = "dd.MM.yyyy.HH:mm";
@@ -44,6 +44,15 @@ public class Glavna {
 		}
 
 		skener.close();
+
+		for (Ispit x : ispiti) {
+
+			if (x.getOcjena().equals(5)) {
+				System.out.println("Student " + x.getStudent().getPrezime() + " " + x.getStudent().getIme()
+						+ " je dobio ocjenu izvrstan na predmetu: " + x.getPredmet().getNaziv());
+			}
+
+		}
 
 //		for (int j = 0; j < profesori.length; j++) {
 //
@@ -99,17 +108,32 @@ public class Glavna {
 			skener.next();
 			System.out.println("Molimo unijeti broj za ocjenu!");
 		}
-		Integer ocjena = skener.nextInt();
+		Integer ocjena = provjeraUnesenogBrojaOcjene(skener);
 
 		System.out.println("Unesite datum i vrijeme " + (i + 1) + ". ispitnog roka: ");
 
 		String datumIVrijemeString = skener.nextLine();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_DATUM_VRIJEME);
-		LocalDateTime datumIVrijemeStringNovi = LocalDateTime.parse(datumIVrijemeString, formatter);
+		LocalDateTime datumIVrijemeIspita = LocalDateTime.parse(datumIVrijemeString, formatter);
 
-		Ispit noviIspit = new Ispit(odabraniPredmet, odabraniStudent, ocjena, datumIVrijemeStringNovi);
+		Ispit noviIspit = new Ispit(odabraniPredmet, odabraniStudent, ocjena, datumIVrijemeIspita);
 
 		return noviIspit;
+	}
+
+	private static Integer provjeraUnesenogBrojaOcjene(Scanner skener) {
+		boolean uvjet = false;
+		String unos = null;
+		while (!uvjet) {
+			unos = skener.nextLine();
+			if (unos.matches("^[1-5]")) {
+				uvjet = true;
+			} else {
+				System.out.println("Broj mora biti između 1 i 5.");
+			}
+		}
+
+		return Integer.parseInt(unos);
 	}
 
 	private static Student unesiStudenta(Scanner skener, int i) {
