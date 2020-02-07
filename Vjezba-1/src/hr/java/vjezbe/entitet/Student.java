@@ -2,7 +2,7 @@ package hr.java.vjezbe.entitet;
 
 import java.time.LocalDate;
 
-public class Student {
+public class Student extends Osoba {
 
 	private String ime;
 	private String prezime;
@@ -10,9 +10,7 @@ public class Student {
 	private LocalDate datumRodenja;
 
 	public Student(String ime, String prezime, String jmbag, LocalDate datumRodenja) {
-		super();
-		this.ime = ime;
-		this.prezime = prezime;
+		super(ime, prezime);
 		this.jmbag = jmbag;
 		this.datumRodenja = datumRodenja;
 	}

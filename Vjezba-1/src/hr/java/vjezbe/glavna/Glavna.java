@@ -14,7 +14,7 @@ public class Glavna {
 
 	private static final int BROJ_PROFESORA = 2;
 	private static final int BROJ_PREDMETA = 2;
-	public static final int BROJ_STUDENATA = 2;
+	public static final int BROJ_STUDENATA = 3;
 	private static final int BROJ_ISPITA = 1;
 	private static final String FORMAT_DATUM_VRIJEME = "dd.MM.yyyy.HH:mm";
 
@@ -53,6 +53,17 @@ public class Glavna {
 			}
 
 		}
+
+		// SORTIRANJE I ISPIS STUDENATA
+//		Arrays.sort(studenti, (p1, p2) -> p1.getPrezime().compareTo(p2.getPrezime()));
+//		Arrays.sort(studenti, new java.util.Comparator<Student>() {
+//
+//			public int compare(Student o1, Student o2) {
+//
+//				return o1.getPrezime().compareTo(o2.getPrezime());
+//			}
+//
+//		});
 
 //		for (int j = 0; j < profesori.length; j++) {
 //
