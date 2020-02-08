@@ -6,53 +6,71 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import hr.java.vjezbe.entitet.Ispit;
+import hr.java.vjezbe.entitet.ObrazovnaUstanova;
 import hr.java.vjezbe.entitet.Predmet;
 import hr.java.vjezbe.entitet.Profesor;
 import hr.java.vjezbe.entitet.Student;
 
 public class Glavna {
 
-	private static final int BROJ_PROFESORA = 2;
-	private static final int BROJ_PREDMETA = 2;
-	public static final int BROJ_STUDENATA = 3;
-	private static final int BROJ_ISPITA = 1;
+//	private static final int BROJ_PROFESORA = 2;
+//	private static final int BROJ_PREDMETA = 2;
+	public static final int BROJ_STUDENATA = 2;
+//	private static final int BROJ_ISPITA = 1;
 	private static final String FORMAT_DATUM_VRIJEME = "dd.MM.yyyy.HH:mm";
 
 	public static void main(String[] args) {
 
 		Scanner skener = new Scanner(System.in);
 
-		Profesor[] profesori = new Profesor[BROJ_PROFESORA];
-		Predmet[] predmeti = new Predmet[BROJ_PREDMETA];
-		Student[] studenti = new Student[BROJ_STUDENATA];
-		Ispit[] ispiti = new Ispit[BROJ_ISPITA];
+		System.out.println("Unesite broj obrazovnih ustanova: ");
+		int brojObrazovnihUstanova = skener.nextInt();
 
-		for (int i = 0; i < BROJ_PROFESORA; i++) {
-			profesori[i] = unesiProfesora(skener, i, profesori);
+		ObrazovnaUstanova[] obrazovnaUstanova = new ObrazovnaUstanova[brojObrazovnihUstanova];
+
+		for (int i = 0; i < obrazovnaUstanova.length; i++) {
+
+			System.out.println("Unesite podatke za " + (i + 1) + " obrazovnu ustanovu: ");
+
+			System.out.println("Unesite broj profesora: ");
+			int brojProfesora = skener.nextInt();
+			skener.nextLine();
+			Profesor[] profesori = unesiProfesora(skener, brojProfesora);
+
+			System.out.println("Unesite broj predmeta: ");
+			int brojPredmeta = skener.nextInt();
+			skener.nextLine();
+
+			Predmet[] predmeti = unesiPredmet(skener, profesori, brojPredmeta);
+
+			Student[] studenti = unesiStudenta(skener, predmeti);
+
+			System.out.println("Unesite broj ispitnih rokova: ");
+			int brojIspitnihRokova = skener.nextInt();
+			skener.nextLine();
+			Ispit[] ispiti = unesiIspit(skener, brojIspitnihRokova, predmeti, studenti);
+
 		}
 
-		for (int i = 0; i < BROJ_PREDMETA; i++) {
-			predmeti[i] = unesiPredmet(skener, i, profesori);
-		}
-
-		for (int i = 0; i < BROJ_STUDENATA; i++) {
-			studenti[i] = unesiStudenta(skener, i);
-		}
-
-		for (int i = 0; i < BROJ_ISPITA; i++) {
-			ispiti[i] = unesiIspit(skener, i, predmeti, studenti);
-		}
+		int odabirUstanove;
+		do {
+			System.out.println("Odaberite obrazovnu istanovu za navedene podatke:\n"
+					+ "1 - Veleuciliste Jave, 2 - Fakultet racunalstva ");
+			odabirUstanove = skener.nextInt();
+		} while (odabirUstanove > 2 || odabirUstanove < 1);
+		skener.nextLine();
 
 		skener.close();
 
-		for (Ispit x : ispiti) {
-
-			if (x.getOcjena().equals(5)) {
-				System.out.println("Student " + x.getStudent().getPrezime() + " " + x.getStudent().getIme()
-						+ " je dobio ocjenu izvrstan na predmetu: " + x.getPredmet().getNaziv());
-			}
-
-		}
+//		TESTIRANJA
+//		for (Ispit x : ispiti) {
+//
+//			if (x.getOcjena().equals(5)) {
+//				System.out.println("Student " + x.getStudent().getPrezime() + " " + x.getStudent().getIme()
+//						+ " je dobio ocjenu izvrstan na predmetu: " + x.getPredmet().getNaziv());
+//			}
+//
+//		}
 
 		// SORTIRANJE I ISPIS STUDENATA
 //		Arrays.sort(studenti, (p1, p2) -> p1.getPrezime().compareTo(p2.getPrezime()));
@@ -80,56 +98,58 @@ public class Glavna {
 
 	}
 
-	private static Ispit unesiIspit(Scanner skener, int i, Predmet[] predmeti, Student[] studenti) {
+	private static Ispit[] unesiIspit(Scanner skener, int brojIspitnihRokova, Predmet[] predmeti, Student[] studenti) {
 
-		Integer odabirBrojPredmeta;
+		Ispit[] ispiti = new Ispit[brojIspitnihRokova];
 
-		do {
-			System.out.println("Odaberite predmet: ");
+		for (int i = 0; i < ispiti.length; i++) {
 
-			for (int j = 0; j < BROJ_PREDMETA; j++) {
-				System.out.println((j + 1) + ". " + predmeti[j].getNaziv());
+			Integer odabirBrojPredmeta;
+			do {
+				System.out.println("Odaberite predmet: ");
 
+				for (int j = 0; j < predmeti.length; j++) {
+					System.out.println((j + 1) + ". " + predmeti[j].getNaziv());
+
+				}
+				odabirBrojPredmeta = skener.nextInt();
+
+			} while (odabirBrojPredmeta < 1 || odabirBrojPredmeta > predmeti.length);
+			skener.nextLine();
+			Predmet odabraniPredmet = predmeti[odabirBrojPredmeta - 1];
+
+			Integer odabirBrojStudenta;
+			do {
+				System.out.println("Odaberite studenta: ");
+
+				for (int j = 0; j < studenti.length; j++) {
+					System.out.println((j + 1) + ". " + studenti[j].getIme() + " " + studenti[j].getPrezime());
+				}
+				odabirBrojStudenta = skener.nextInt();
+
+			} while (odabirBrojStudenta < 1 || odabirBrojStudenta > studenti.length);
+			skener.nextLine();
+
+			Student odabraniStudent = studenti[odabirBrojStudenta - 1];
+
+			System.out.println("Unesite ocjenu za " + (i + 1) + ". ispitni rok: ");
+
+			while (!skener.hasNextInt()) {
+				skener.next();
+				System.out.println("Molimo unijeti broj za ocjenu!");
 			}
-			odabirBrojPredmeta = skener.nextInt();
+			Integer ocjena = provjeraUnesenogBrojaOcjene(skener);
 
-		} while (odabirBrojPredmeta < 1 || odabirBrojPredmeta > BROJ_PREDMETA);
-		skener.nextLine();
+			System.out.println("Unesite datum i vrijeme " + (i + 1) + ". ispitnog roka: ");
 
-		Predmet odabraniPredmet = predmeti[odabirBrojPredmeta - 1];
+			String datumIVrijemeString = skener.nextLine();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_DATUM_VRIJEME);
+			LocalDateTime datumIVrijemeIspita = LocalDateTime.parse(datumIVrijemeString, formatter);
 
-		Integer odabirBrojStudenta;
-
-		do {
-			System.out.println("Odaberite studenta: ");
-
-			for (int j = 0; j < BROJ_STUDENATA; j++) {
-				System.out.println((j + 1) + ". " + studenti[j].getIme() + " " + studenti[j].getPrezime());
-			}
-			odabirBrojStudenta = skener.nextInt();
-
-		} while (odabirBrojStudenta < 1 || odabirBrojStudenta > BROJ_STUDENATA);
-		skener.nextLine();
-
-		Student odabraniStudent = studenti[odabirBrojStudenta - 1];
-
-		System.out.println("Unesite ocjenu za " + (i + 1) + ". ispitni rok: ");
-
-		while (!skener.hasNextInt()) {
-			skener.next();
-			System.out.println("Molimo unijeti broj za ocjenu!");
+			ispiti[i] = new Ispit(odabraniPredmet, odabraniStudent, ocjena, datumIVrijemeIspita);
 		}
-		Integer ocjena = provjeraUnesenogBrojaOcjene(skener);
 
-		System.out.println("Unesite datum i vrijeme " + (i + 1) + ". ispitnog roka: ");
-
-		String datumIVrijemeString = skener.nextLine();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_DATUM_VRIJEME);
-		LocalDateTime datumIVrijemeIspita = LocalDateTime.parse(datumIVrijemeString, formatter);
-
-		Ispit noviIspit = new Ispit(odabraniPredmet, odabraniStudent, ocjena, datumIVrijemeIspita);
-
-		return noviIspit;
+		return ispiti;
 	}
 
 	private static Integer provjeraUnesenogBrojaOcjene(Scanner skener) {
@@ -147,78 +167,120 @@ public class Glavna {
 		return Integer.parseInt(unos);
 	}
 
-	private static Student unesiStudenta(Scanner skener, int i) {
+	private static Student[] unesiStudenta(Scanner skener, Predmet[] predmeti) {
 
-		System.out.println("Unesite ime " + (i + 1) + " studenta:");
-		String ime = skener.nextLine();
+		for (int i = 0; i < predmeti.length; i++) {
 
-		System.out.println("Unesite prezime" + (i + 1) + " studenta:");
-		String prezime = skener.nextLine();
+			int brojStudenata = predmeti[i].getStudenti().length;
 
-		System.out.println("Unesite JMBAG " + (i + 1) + " studenta:");
-		String jmbag = skener.nextLine();
+			System.out.println("Unesite studente za predmet " + predmeti[i].getNaziv());
 
-		System.out.println("Unesite datum rodenja " + (i + 1) + " studenta (DD.MM.YYYY.):");
-		String datumRodenja = skener.nextLine();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
-		LocalDate datumRodjenja = LocalDate.parse(datumRodenja, formatter);
+			Student[] noviStudent = new Student[brojStudenata];
 
-		Student noviStudent = new Student(ime, prezime, jmbag, datumRodjenja);
+			for (int j = 0; j < noviStudent.length; j++) {
 
-		return noviStudent;
+				System.out.println("Unesite ime " + (j + 1) + " studenta:");
+				String ime = skener.nextLine();
+
+				System.out.println("Unesite prezime" + (j + 1) + " studenta:");
+				String prezime = skener.nextLine();
+
+				System.out.println("Unesite JMBAG " + (j + 1) + " studenta:");
+				String jmbag = skener.nextLine();
+
+				System.out.println("Unesite datum rodenja " + (j + 1) + " studenta (DD.MM.YYYY.):");
+				String datumRodenja = skener.nextLine();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+				LocalDate datumRodjenja = LocalDate.parse(datumRodenja, formatter);
+
+				noviStudent[j] = new Student(ime, prezime, jmbag, datumRodjenja);
+			}
+			predmeti[i].setStudenti(noviStudent);
+		}
+
+		int ukupanBrojStudenta = 0;
+
+		for (Predmet pred : predmeti) {
+			int velicinaPoljaStudenta = pred.getStudenti().length;
+			ukupanBrojStudenta = velicinaPoljaStudenta;
+		}
+
+		Student[] student = new Student[ukupanBrojStudenta];
+
+		for (Predmet pred : predmeti) {
+			for (Student stud : pred.getStudenti()) {
+				for (int k = 0; k < student.length; k++) {
+					student[k] = stud;
+				}
+			}
+
+		}
+
+		return student;
+
 	}
 
-	private static Predmet unesiPredmet(Scanner skener, int i, Profesor[] profesori) {
+	private static Predmet[] unesiPredmet(Scanner skener, Profesor[] profesori, int brojPredmeta) {
 
-		Integer odabirProfesora = 0;
+		Predmet[] predmeti = new Predmet[brojPredmeta];
 
-		System.out.println("Unesite sifru " + (i + 1) + " predmeta:");
-		String sifra = skener.nextLine();
+		for (int i = 0; i < predmeti.length; i++) {
 
-		System.out.println("Unesite naziv " + (i + 1) + " predmeta:");
-		String naziv = skener.nextLine();
+			Integer odabirProfesora = 0;
 
-		System.out.println("Unesite broj ECTS bodova " + (i + 1) + " predmeta:");
-		Integer brojEctsBodova = skener.nextInt();
+			System.out.println("Unesite sifru " + (i + 1) + " predmeta:");
+			String sifra = skener.nextLine();
 
-		do {
-			System.out.println("Odaberite profesora za predmet: ");
+			System.out.println("Unesite naziv " + (i + 1) + " predmeta:");
+			String naziv = skener.nextLine();
 
-			for (int j = 0; j < BROJ_PROFESORA; j++) {
-				System.out.println((j + 1) + ". " + profesori[j].getIme() + " " + profesori[j].getPrezime());
-			}
-			odabirProfesora = skener.nextInt();
+			System.out.println("Unesite broj ECTS bodova " + (i + 1) + " predmeta:");
+			Integer brojEctsBodova = skener.nextInt();
+
+			do {
+				System.out.println("Odaberite profesora za predmet: ");
+
+				for (int j = 0; j < profesori.length; j++) {
+					System.out.println((j + 1) + ". " + profesori[j].getIme() + " " + profesori[j].getPrezime());
+				}
+				odabirProfesora = skener.nextInt();
+				skener.nextLine();
+
+			} while (odabirProfesora < 1 || odabirProfesora > profesori.length);
+
+			Profesor odabraniProfesor = profesori[odabirProfesora - 1];
+
+			System.out.println("Unesite broj studenata na predmetu " + naziv + ": ");
+			Integer brojStudenata = skener.nextInt();
 			skener.nextLine();
 
-		} while (odabirProfesora < 1 || odabirProfesora > BROJ_PROFESORA);
+			predmeti[i] = new Predmet(sifra, naziv, brojEctsBodova, odabraniProfesor, brojStudenata);
+		}
 
-		Profesor odabraniProfesor = profesori[odabirProfesora - 1];
-
-		System.out.println("Unesite broj studenata na predmetu " + naziv + ": ");
-		Integer brojStudenata = skener.nextInt();
-		skener.nextLine();
-
-		Predmet noviPredmet = new Predmet(sifra, naziv, brojEctsBodova, odabraniProfesor, brojStudenata);
-
-		return noviPredmet;
+		return predmeti;
 	}
 
-	private static Profesor unesiProfesora(Scanner skener, int i, Profesor[] profesori) {
+	private static Profesor[] unesiProfesora(Scanner skener, int brojProfesora) {
 
-		System.out.println("Unesite sifru " + (i + 1) + " profesora:");
-		String sifra = skener.nextLine();
+		Profesor[] profesori = new Profesor[brojProfesora];
 
-		System.out.println("Unesite ime " + (i + 1) + " profesora:");
-		String ime = skener.nextLine();
+		for (int i = 0; i < profesori.length; i++) {
 
-		System.out.println("Unesite prezime " + (i + 1) + " profesora:");
-		String prezime = skener.nextLine();
+			System.out.println("Unesite sifru " + (i + 1) + " profesora:");
+			String sifra = skener.nextLine();
 
-		System.out.println("Unesite titulu " + (i + 1) + " profesora:");
-		String titula = skener.nextLine();
+			System.out.println("Unesite ime " + (i + 1) + " profesora:");
+			String ime = skener.nextLine();
 
-		Profesor noviProfesor = new Profesor(sifra, ime, prezime, titula);
+			System.out.println("Unesite prezime " + (i + 1) + " profesora:");
+			String prezime = skener.nextLine();
 
-		return noviProfesor;
+			System.out.println("Unesite titulu " + (i + 1) + " profesora:");
+			String titula = skener.nextLine();
+
+			profesori[i] = new Profesor(sifra, ime, prezime, titula);
+		}
+
+		return profesori;
 	}
 }
