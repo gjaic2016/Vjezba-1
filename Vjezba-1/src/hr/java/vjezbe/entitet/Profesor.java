@@ -1,6 +1,6 @@
 package hr.java.vjezbe.entitet;
 
-public class Profesor {
+public class Profesor extends Osoba {
 
 	private String sifra;
 	private String ime;
@@ -8,10 +8,8 @@ public class Profesor {
 	private String titula;
 
 	public Profesor(String sifra, String ime, String prezime, String titula) {
-		super();
+		super(ime, prezime);
 		this.sifra = sifra;
-		this.ime = ime;
-		this.prezime = prezime;
 		this.titula = titula;
 	}
 
