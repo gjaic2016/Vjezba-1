@@ -16,7 +16,7 @@ import hr.java.vjezbe.entitet.VeleucilisteJave;
 
 public class Glavna {
 
-	final static int GODINA = 2018;
+	final static int GODINA = 1111;
 	public static final int BROJ_STUDENATA = 2;
 	private static final String FORMAT_DATUM = "dd.MM.yyyy.";
 	private static final String FORMAT_DATUM_VRIJEME = "dd.MM.yyyy.HH:mm";
@@ -261,16 +261,18 @@ public class Glavna {
 
 		for (Predmet pred : predmeti) {
 			int velicinaPoljaStudenta = pred.getStudenti().length;
-			ukupanBrojStudenta = velicinaPoljaStudenta;
+			// ukupanBrojStudenta += velicinaPoljaStudenta;
+			ukupanBrojStudenta = ukupanBrojStudenta + velicinaPoljaStudenta;
 		}
 
 		Student[] student = new Student[ukupanBrojStudenta];
 
+		int k = 0;
 		for (Predmet pred : predmeti) {
 			for (Student stud : pred.getStudenti()) {
-				for (int k = 0; k < student.length; k++) {
-					student[k] = stud;
-				}
+				//for (int k = 0; k < student.length; k++) {
+					student[k++] = stud;
+				//}
 			}
 
 		}
