@@ -8,7 +8,7 @@ public class VeleucilisteJave extends ObrazovnaUstanova implements Visokoskolska
 	public VeleucilisteJave(String naziv, Predmet[] predmeti, Profesor[] profesori, Student[] studenti,
 			Ispit[] ispiti) {
 		super(naziv, predmeti, profesori, studenti, ispiti);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	@Override

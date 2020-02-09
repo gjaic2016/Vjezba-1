@@ -8,14 +8,12 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 	public FakultetRacunalstva(String naziv, Predmet[] predmeti, Profesor[] profesori, Student[] studenti,
 			Ispit[] ispiti) {
 		super(naziv, predmeti, profesori, studenti, ispiti);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	@Override
 	public BigDecimal izracunajKonacnuOcjenuStudijaZaStudenta(Ispit[] ispiti, Integer ocjenaPismenogDjelaDiplomskogRada,
 			Integer ocjenaObraneDiplomskogRada) {
-
-//		konačna ocjena = (3 * prosjek ocjena studenta + ocjena diplomskog rada + ocjena obrane diplomskog rada) / 5
 
 		BigDecimal bd3 = new BigDecimal("3");
 		BigDecimal bd5 = new BigDecimal("5");
@@ -30,8 +28,27 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 
 	@Override
 	public Student odrediStudentaZaRektorovuNagradu() {
-		// TODO Auto-generated method stub
-		return null;
+
+		Ispit[] sviIspiti = getIspiti();
+		Student[] sviStudenti = getStudenti();
+
+		Student najuspjesnijiStudent = sviStudenti[0];
+
+		Ispit[] ispitiNajboljegStudenta = filtrirajIspitePoStudentu(sviIspiti, najuspjesnijiStudent);
+		BigDecimal prosjekNajboljegStudenta = odrediProsjekOcjenaNaIspitima(ispitiNajboljegStudenta);
+
+		for (Student student : sviStudenti) {
+			Ispit[] ispitiStudenta = filtrirajIspitePoStudentu(sviIspiti, student);
+			BigDecimal prosjecnaOcjenaStudenta = odrediProsjekOcjenaNaIspitima(ispitiStudenta);
+			if (prosjecnaOcjenaStudenta.compareTo(prosjekNajboljegStudenta) >= 0) {
+				if (student.getDatumRodenja().compareTo(najuspjesnijiStudent.getDatumRodenja()) >= 0) {
+					najuspjesnijiStudent = student;
+					prosjekNajboljegStudenta = prosjecnaOcjenaStudenta;
+				}
+			}
+		}
+
+		return najuspjesnijiStudent;
 	}
 
 	@Override
@@ -60,7 +77,7 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 
 		for (int i = 0; i < ispitiNajboljegStudenta.length; i++) {
 			if (ispitiNajboljegStudenta[i].getOcjena() == 5) {
-				brojacOdlicnihOcjenaNajboljegStudenta++;
+				brojacOdlicnihOcjenaNajboljegStudenta = brojacOdlicnihOcjenaNajboljegStudenta + 1;
 			}
 		}
 
@@ -70,7 +87,7 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 			int brojacOdlicnihOcjenaStudenta = 0;
 			for (int i = 0; i < ispitiStudenta.length; i++) {
 				if (ispitiStudenta[i].getOcjena() == 5) {
-					brojacOdlicnihOcjenaStudenta++;
+					brojacOdlicnihOcjenaStudenta = brojacOdlicnihOcjenaStudenta + 1;
 				}
 			}
 		}

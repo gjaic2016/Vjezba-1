@@ -4,8 +4,6 @@ import java.time.LocalDate;
 
 public class Student extends Osoba {
 
-	private String ime;
-	private String prezime;
 	private String jmbag;
 	private LocalDate datumRodenja;
 
@@ -16,19 +14,19 @@ public class Student extends Osoba {
 	}
 
 	public String getIme() {
-		return ime;
+		return super.getIme();
 	}
 
 	public void setIme(String ime) {
-		this.ime = ime;
+		super.setIme(ime);
 	}
 
 	public String getPrezime() {
-		return prezime;
+		return super.getPrezime();
 	}
 
 	public void setPrezime(String prezime) {
-		this.prezime = prezime;
+		super.setPrezime(prezime);
 	}
 
 	public String getJmbag() {
