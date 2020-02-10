@@ -4,7 +4,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import hr.java.vjezbe.entitet.FakultetRacunalstva;
 import hr.java.vjezbe.entitet.Ispit;
@@ -16,6 +20,8 @@ import hr.java.vjezbe.entitet.VeleucilisteJave;
 
 public class Glavna {
 
+	private static final Logger logger = LoggerFactory.getLogger(Glavna.class);
+
 	final static int GODINA = 1111;
 	public static final int BROJ_STUDENATA = 2;
 	private static final String FORMAT_DATUM = "dd.MM.yyyy.";
@@ -23,10 +29,26 @@ public class Glavna {
 
 	public static void main(String[] args) {
 
+		logger.info("Program je pokrenut...");
+
 		Scanner skener = new Scanner(System.in);
 
-		System.out.println("Unesite broj obrazovnih ustanova: ");
-		int brojObrazovnihUstanova = skener.nextInt();
+		boolean provjeraWhilePetlja = false;
+		int brojObrazovnihUstanova = 0;
+
+		do {
+			try {
+				System.out.print("Unesite broj obrazovnih ustanova za unos: ");
+				brojObrazovnihUstanova = skener.nextInt();
+				logger.info("Unesen broj obrazovnih ustanova: " + brojObrazovnihUstanova);
+				provjeraWhilePetlja = false;
+			} catch (InputMismatchException greska) {
+				System.out.println("Molimo upisite broj!");
+				skener.nextLine();
+				logger.error("Unesen tekst umjesto broja za broj ustanova!" + brojObrazovnihUstanova, greska);
+				provjeraWhilePetlja = true;
+			}
+		} while (provjeraWhilePetlja);
 
 		ObrazovnaUstanova[] obrazovnaUstanova = new ObrazovnaUstanova[brojObrazovnihUstanova];
 
@@ -270,9 +292,9 @@ public class Glavna {
 		int k = 0;
 		for (Predmet pred : predmeti) {
 			for (Student stud : pred.getStudenti()) {
-				//for (int k = 0; k < student.length; k++) {
-					student[k++] = stud;
-				//}
+				// for (int k = 0; k < student.length; k++) {
+				student[k++] = stud;
+				// }
 			}
 
 		}
