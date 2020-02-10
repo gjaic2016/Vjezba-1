@@ -3,6 +3,7 @@ package hr.java.vjezbe.glavna;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -17,6 +18,10 @@ import hr.java.vjezbe.entitet.Predmet;
 import hr.java.vjezbe.entitet.Profesor;
 import hr.java.vjezbe.entitet.Student;
 import hr.java.vjezbe.entitet.VeleucilisteJave;
+
+/**
+ * @author Fluffy @
+ */
 
 public class Glavna {
 
@@ -56,22 +61,62 @@ public class Glavna {
 
 			System.out.println("Unesite podatke za " + (i + 1) + " obrazovnu ustanovu: ");
 
-			System.out.println("Unesite broj profesora: ");
-			int brojProfesora = skener.nextInt();
-			skener.nextLine();
+			provjeraWhilePetlja = false;
+			int brojProfesora = 0;
+			do {
+				try {
+					System.out.println("Unesite broj profesora: ");
+					brojProfesora = skener.nextInt();
+					logger.info("Unesen broj profesora: " + brojProfesora);
+					skener.nextLine();
+					provjeraWhilePetlja = false;
+
+				} catch (InputMismatchException greska) {
+					System.out.println("Molimo upisite broj profesora!");
+					skener.nextLine();
+					logger.error("Unesen tekst umjesto broja za broj profesora!" + brojProfesora, greska);
+					provjeraWhilePetlja = true;
+				}
+
+			} while (provjeraWhilePetlja);
 			Profesor[] profesori = unesiProfesora(skener, brojProfesora);
 
-			System.out.println("Unesite broj predmeta: ");
-			int brojPredmeta = skener.nextInt();
-			skener.nextLine();
-
+			provjeraWhilePetlja = false;
+			int brojPredmeta = 0;
+			do {
+				try {
+					System.out.println("Unesite broj predmeta: ");
+					brojPredmeta = skener.nextInt();
+					logger.info("Unesen broj predmeta: " + brojPredmeta);
+					skener.nextLine();
+					provjeraWhilePetlja = false;
+				} catch (InputMismatchException greska) {
+					System.out.println("Molimo upisite broj predmeta!");
+					skener.nextLine();
+					logger.error("Unesen tekst umjesto broja za broj predmeta!" + brojPredmeta, greska);
+					provjeraWhilePetlja = true;
+				}
+			} while (provjeraWhilePetlja);
 			Predmet[] predmeti = unesiPredmet(skener, profesori, brojPredmeta);
 
 			Student[] studenti = unesiStudenta(skener, predmeti);
 
-			System.out.println("Unesite broj ispitnih rokova: ");
-			int brojIspitnihRokova = skener.nextInt();
-			skener.nextLine();
+			provjeraWhilePetlja = false;
+			int brojIspitnihRokova = 0;
+			do {
+				try {
+					System.out.println("Unesite broj ispitnih rokova: ");
+					brojIspitnihRokova = skener.nextInt();
+					logger.info("Unesen broj ispitnih rokova: " + brojIspitnihRokova);
+					provjeraWhilePetlja = false;
+				} catch (InputMismatchException greska) {
+					System.out.println("Molimo upisite broj predmeta!");
+					skener.nextLine();
+					logger.error("Unesen tekst umjesto broja za broj ispitnih rokova!" + brojIspitnihRokova, greska);
+					provjeraWhilePetlja = true;
+				}
+			} while (provjeraWhilePetlja);
+
 			Ispit[] ispiti = unesiIspit(skener, brojIspitnihRokova, predmeti, studenti);
 
 			// TEST SORTIRANJA
@@ -94,11 +139,22 @@ public class Glavna {
 			}
 
 			// ODABIR USTANOVE
-			int odabirUstanove;
+			int odabirUstanove = 0;
+			provjeraWhilePetlja = false;
 			do {
-				System.out.println("Odaberite obrazovnu istanovu za navedene podatke:\n"
-						+ "1 - Veleuciliste Jave, 2 - Fakultet racunalstva ");
-				odabirUstanove = skener.nextInt();
+
+				try {
+					System.out.println("Odaberite obrazovnu istanovu za navedene podatke:\n"
+							+ "1 - Veleuciliste Jave, 2 - Fakultet racunalstva ");
+					odabirUstanove = skener.nextInt();
+					logger.error("Unesen broj obrazovne ustanove: " + odabirUstanove);
+				} catch (InputMismatchException greska) {
+					System.out.println("Molimo upisite broj odabira obrazovne ustanove!");
+					skener.nextLine();
+					logger.error("Unesen tekst umjesto broja za broj obrazovnih ustanova!" + odabirUstanove, greska);
+					provjeraWhilePetlja = true;
+				}
+
 			} while (odabirUstanove > 2 || odabirUstanove < 1);
 			skener.nextLine();
 
@@ -111,20 +167,53 @@ public class Glavna {
 						studenti, ispiti);
 
 				for (Student x : veleucilisteJave.getStudenti()) {
-					System.out.println("Unesite ocjenu završnog rada za studenta " + x.getIme() + " " + x.getPrezime());
-					Integer ocjenaPismenogDjelaZavrsnogRada = skener.nextInt();
 
-					System.out.println(
-							"Unesite ocjenu obrane završnog rada za studenta " + x.getIme() + " " + x.getPrezime());
-					Integer ocjenaObraneZavrsnogRada = skener.nextInt();
+					provjeraWhilePetlja = false;
+					Integer ocjenaPismenogDjelaZavrsnogRada = 0;
+					do {
+						try {
+							System.out.println(
+									"Unesite ocjenu završnog rada za studenta " + x.getIme() + " " + x.getPrezime());
+							ocjenaPismenogDjelaZavrsnogRada = skener.nextInt();
+							logger.info("Unesena ocjena zavrsnog rada za studenta " + x.getIme() + " " + x.getPrezime()
+									+ " je: " + ocjenaPismenogDjelaZavrsnogRada);
+							provjeraWhilePetlja = false;
+						} catch (InputMismatchException greska) {
+							System.out.println("Molimo upisati ocjenu od 1 do 5!");
+							skener.nextLine();
+							logger.error("Unesen tekst umjesto broj za ocjenu pismenog zavrsnog rada!"
+									+ ocjenaPismenogDjelaZavrsnogRada, greska);
+							provjeraWhilePetlja = true;
+						}
+					} while (provjeraWhilePetlja);
 
-					System.out.println("Konacna ocjena studija studenta " + x.getIme() + " " + x.getPrezime() + " je:"
+					provjeraWhilePetlja = false;
+					Integer ocjenaObraneZavrsnogRada = 0;
+					do {
+						try {
+							System.out.println("Unesite ocjenu obrane završnog rada za studenta " + x.getIme() + " "
+									+ x.getPrezime());
+							ocjenaObraneZavrsnogRada = skener.nextInt();
+							logger.info("Unesena ocjena obrane zavrsnog rada za studenta " + x.getIme() + " "
+									+ x.getPrezime() + " je: " + ocjenaObraneZavrsnogRada);
+							provjeraWhilePetlja = false;
+						} catch (InputMismatchException greska) {
+							System.out.println("Molimo upisati ocjenu od 1 do 5!");
+							skener.nextLine();
+							logger.error("Unesen tekst umjesto broj za ocjenu obrane zavrsnog rada!"
+									+ ocjenaObraneZavrsnogRada, greska);
+							provjeraWhilePetlja = true;
+						}
+					} while (provjeraWhilePetlja);
+
+					System.out.println("Konacna ocjena studija studenta " + x.getIme() + " " + x.getPrezime() + " je: "
 							+ veleucilisteJave.izracunajKonacnuOcjenuStudijaZaStudenta(
 									veleucilisteJave.filtrirajIspitePoStudentu(ispiti, x),
 									ocjenaPismenogDjelaZavrsnogRada, ocjenaObraneZavrsnogRada));
+
 				}
 
-				System.out.println("Najbolji student" + GODINA + ". godine je: "
+				System.out.println("Najbolji student " + GODINA + ". godine je: "
 						+ veleucilisteJave.odrediNajuspjesnijegStudentaNaGodini(GODINA).getIme() + " "
 						+ veleucilisteJave.odrediNajuspjesnijegStudentaNaGodini(GODINA).getPrezime() + ", JMBAG: "
 						+ veleucilisteJave.odrediNajuspjesnijegStudentaNaGodini(GODINA).getJmbag());
@@ -141,13 +230,46 @@ public class Glavna {
 						profesori, studenti, ispiti);
 
 				for (Student x : fakultetRacunalstva.getStudenti()) {
-					System.out
-							.println("Unesite ocjenu diplomskog rada za studenta " + x.getIme() + " " + x.getPrezime());
-					Integer ocjenaPismenogDjelaDiplomskogRada = skener.nextInt();
 
-					System.out.println(
-							"Unesite ocjenu obrane diplomskog rada za studenta " + x.getIme() + " " + x.getPrezime());
-					Integer ocjenaObraneDiplomskogRada = skener.nextInt();
+					provjeraWhilePetlja = false;
+					Integer ocjenaPismenogDjelaDiplomskogRada = 0;
+					do {
+						try {
+							System.out.println(
+									"Unesite ocjenu diplomskog rada za studenta " + x.getIme() + " " + x.getPrezime());
+							ocjenaPismenogDjelaDiplomskogRada = skener.nextInt();
+							logger.info("Unesena ocjena diplomskog rada za studenta " + x.getIme() + " "
+									+ x.getPrezime() + " je: " + ocjenaPismenogDjelaDiplomskogRada);
+							provjeraWhilePetlja = false;
+						} catch (InputMismatchException greska) {
+							System.out.println("Molimo upisati ocjenu od 1 do 5!");
+							skener.nextLine();
+							logger.error("Unesen tekst umjesto broj za ocjenu diplomskog rada!"
+									+ ocjenaPismenogDjelaDiplomskogRada, greska);
+							provjeraWhilePetlja = true;
+						}
+
+					} while (provjeraWhilePetlja);
+
+					provjeraWhilePetlja = false;
+					Integer ocjenaObraneDiplomskogRada = 0;
+					do {
+						try {
+							System.out.println("Unesite ocjenu obrane diplomskog rada za studenta " + x.getIme() + " "
+									+ x.getPrezime());
+							ocjenaObraneDiplomskogRada = skener.nextInt();
+							logger.info("Unesena ocjena diplomskog rada za studenta " + x.getIme() + " "
+									+ x.getPrezime() + " je: " + ocjenaObraneDiplomskogRada);
+							provjeraWhilePetlja = false;
+						} catch (InputMismatchException greska) {
+							System.out.println("Molimo upisati ocjenu od 1 do 5!");
+							skener.nextLine();
+							logger.error("Unesen tekst umjesto broj za ocjenu obrane diplomskog rada!"
+									+ ocjenaObraneDiplomskogRada, greska);
+							provjeraWhilePetlja = true;
+						}
+
+					} while (provjeraWhilePetlja);
 
 					System.out.println("Konacna ocjena studija studenta " + x.getIme() + " " + x.getPrezime() + " je:"
 							+ fakultetRacunalstva.izracunajKonacnuOcjenuStudijaZaStudenta(
@@ -263,16 +385,30 @@ public class Glavna {
 				System.out.println("Unesite ime " + (j + 1) + " studenta:");
 				String ime = skener.nextLine();
 
-				System.out.println("Unesite prezime" + (j + 1) + " studenta:");
+				System.out.println("Unesite prezime " + (j + 1) + " studenta:");
 				String prezime = skener.nextLine();
 
 				System.out.println("Unesite JMBAG " + (j + 1) + " studenta:");
 				String jmbag = skener.nextLine();
 
-				System.out.println("Unesite datum rodenja " + (j + 1) + " studenta (DD.MM.YYYY.):");
-				String datumRodenja = skener.nextLine();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_DATUM);
-				LocalDate datumRodjenja = LocalDate.parse(datumRodenja, formatter);
+				boolean provjeraWhilePetlja = false;
+				String datumRodenja = "";
+				LocalDate datumRodjenja = null;
+				do {
+					try {
+						System.out.println("Unesite datum rodenja " + (j + 1) + " studenta (DD.MM.YYYY.):");
+						datumRodenja = skener.nextLine();
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_DATUM);
+						datumRodjenja = LocalDate.parse(datumRodenja, formatter);
+						provjeraWhilePetlja = false;
+
+					} catch (DateTimeParseException greska) {
+						System.out.println("  Potrebno unijeti datum u formatu dd.mm.yyyy.! ");
+						logger.info("Pogrešno unesen datum!", greska);
+						provjeraWhilePetlja = true;
+					}
+
+				} while (provjeraWhilePetlja);
 
 				noviStudent[j] = new Student(ime, prezime, jmbag, datumRodjenja);
 			}
@@ -307,9 +443,9 @@ public class Glavna {
 
 		Predmet[] predmeti = new Predmet[brojPredmeta];
 
-		for (int i = 0; i < predmeti.length; i++) {
+		boolean provjeraWhilePetlja = false;
 
-			Integer odabirProfesora = 0;
+		for (int i = 0; i < predmeti.length; i++) {
 
 			System.out.println("Unesite sifru " + (i + 1) + " predmeta:");
 			String sifra = skener.nextLine();
@@ -317,25 +453,63 @@ public class Glavna {
 			System.out.println("Unesite naziv " + (i + 1) + " predmeta:");
 			String naziv = skener.nextLine();
 
-			System.out.println("Unesite broj ECTS bodova " + (i + 1) + " predmeta:");
-			Integer brojEctsBodova = skener.nextInt();
-
+			provjeraWhilePetlja = false;
+			Integer brojEctsBodova = 0;
 			do {
-				System.out.println("Odaberite profesora za predmet: ");
-
-				for (int j = 0; j < profesori.length; j++) {
-					System.out.println((j + 1) + ". " + profesori[j].getIme() + " " + profesori[j].getPrezime());
+				try {
+					System.out.println("Unesite broj ECTS bodova " + (i + 1) + " predmeta:");
+					while (!skener.hasNextInt()) {
+						System.out.println("Unesite broj!");
+						skener.next();
+					}
+					brojEctsBodova = skener.nextInt();
+					logger.info("Upisan broj ECTS bodova: " + brojEctsBodova);
+					provjeraWhilePetlja = false;
+				} catch (InputMismatchException greska) {
+					System.out.println("Molimo upisite broj za ECTS bodove!");
+					skener.nextLine();
+					logger.error("Unesen tekst umjesto broja ECTS bodova!" + brojEctsBodova, greska);
+					provjeraWhilePetlja = true;
 				}
-				odabirProfesora = skener.nextInt();
-				skener.nextLine();
+			} while (provjeraWhilePetlja);
 
-			} while (odabirProfesora < 1 || odabirProfesora > profesori.length);
+			Integer odabirProfesora = 0;
+			provjeraWhilePetlja = false;
+			do {
+				try {
+					System.out.println("Odaberite profesora za predmet: ");
+					for (int j = 0; j < profesori.length; j++) {
+						System.out.println((j + 1) + ". " + profesori[j].getIme() + " " + profesori[j].getPrezime());
+					}
+					odabirProfesora = skener.nextInt();
+					provjeraWhilePetlja = false;
+				} catch (InputMismatchException greska) {
+					System.out.println("Molimo upisite broj za odabir profesora!");
+					skener.nextLine();
+					logger.error("Unesen tekst umjesto broja za odabir profesora!" + odabirProfesora, greska);
+					provjeraWhilePetlja = true;
+				}
+
+			} while (odabirProfesora < 1 || odabirProfesora > profesori.length && provjeraWhilePetlja);
 
 			Profesor odabraniProfesor = profesori[odabirProfesora - 1];
 
-			System.out.println("Unesite broj studenata na predmetu " + naziv + ": ");
-			Integer brojStudenata = skener.nextInt();
-			skener.nextLine();
+			provjeraWhilePetlja = false;
+			Integer brojStudenata = 0;
+			do {
+				try {
+					System.out.println("Unesite broj studenata na predmetu " + naziv + ": ");
+					brojStudenata = skener.nextInt();
+					logger.info("Unesen broj studenata na predmetu: " + brojStudenata);
+					skener.nextLine();
+					provjeraWhilePetlja = false;
+				} catch (InputMismatchException greska) {
+					System.out.println("Molimo upisite broj studenata!");
+					skener.nextLine();
+					logger.error("Unesen tekst umjesto broja studenata na predmetu!" + brojStudenata, greska);
+					provjeraWhilePetlja = true;
+				}
+			} while (provjeraWhilePetlja);
 
 			predmeti[i] = new Predmet(sifra, naziv, brojEctsBodova, odabraniProfesor, brojStudenata);
 		}
