@@ -1,20 +1,24 @@
 package hr.java.vjezbe.entitet;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Predmet {
 
 	private String sifra;
 	private String naziv;
 	private Integer brojEctsBodova;
 	private Profesor nositelj;
-	private Student[] studenti;
+//	private Student[] studenti;
+	private Set<Student> studenti = new HashSet<Student>();
 
-	public Predmet(String sifra, String naziv, Integer brojEctsBodova, Profesor nositelj, Integer brojStudenata) {
+	public Predmet(String sifra, String naziv, Integer brojEctsBodova, Profesor nositelj) {
 		super();
 		this.sifra = sifra;
 		this.naziv = naziv;
 		this.brojEctsBodova = brojEctsBodova;
 		this.nositelj = nositelj;
-		this.studenti = new Student[brojStudenata];
+//		this.studenti = new Student[brojStudenata];
 	}
 
 	public String getSifra() {
@@ -49,12 +53,19 @@ public class Predmet {
 		this.nositelj = nositelj;
 	}
 
-	public Student[] getStudenti() {
+//	public Student[] getStudenti() {
+//		return studenti;
+//	}
+//
+//	public void setStudenti(Student[] studenti) {
+//		this.studenti = studenti;
+//	}
+
+	public Set<Student> getStudent() {
 		return studenti;
 	}
 
-	public void setStudenti(Student[] studenti) {
+	public void setStudent(Set<Student> studenti) {
 		this.studenti = studenti;
 	}
-
 }

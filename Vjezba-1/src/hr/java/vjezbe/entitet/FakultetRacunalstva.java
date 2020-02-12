@@ -1,7 +1,8 @@
 package hr.java.vjezbe.entitet;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +15,15 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 
 	public static final Logger logger = LoggerFactory.getLogger(Glavna.class);
 
-	public FakultetRacunalstva(String naziv, Predmet[] predmeti, Profesor[] profesori, Student[] studenti,
-			Ispit[] ispiti) {
+	public FakultetRacunalstva(String naziv, List<Predmet> predmeti, List<Profesor> profesori, List<Student> studenti,
+			List<Ispit> ispiti) {
 		super(naziv, predmeti, profesori, studenti, ispiti);
 
 	}
 
 	@Override
-	public BigDecimal izracunajKonacnuOcjenuStudijaZaStudenta(Ispit[] ispiti, Integer ocjenaPismenogDjelaDiplomskogRada,
-			Integer ocjenaObraneDiplomskogRada) {
+	public BigDecimal izracunajKonacnuOcjenuStudijaZaStudenta(List<Ispit> ispiti,
+			Integer ocjenaPismenogDjelaDiplomskogRada, Integer ocjenaObraneDiplomskogRada) {
 
 		BigDecimal bd3 = new BigDecimal("3");
 		BigDecimal bd5 = new BigDecimal("5");
@@ -44,12 +45,12 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 	@Override
 	public Student odrediStudentaZaRektorovuNagradu() throws PostojiViseNajmladjihStudenataException {
 
-		Ispit[] sviIspiti = getIspiti();
-		Student[] sviStudenti = getStudenti();
+		List<Ispit> sviIspiti = getIspiti();
+		List<Student> sviStudenti = getStudenti();
 
-		Student najuspjesnijiStudent = sviStudenti[0];
+		Student najuspjesnijiStudent = sviStudenti.get(0);
 
-		Ispit[] ispitiNajboljegStudenta = filtrirajIspitePoStudentu(sviIspiti, najuspjesnijiStudent);
+		List<Ispit> ispitiNajboljegStudenta = filtrirajIspitePoStudentu(sviIspiti, najuspjesnijiStudent);
 		BigDecimal prosjekNajboljegStudenta = new BigDecimal("0");
 		try {
 			prosjekNajboljegStudenta = odrediProsjekOcjenaNaIspitima(ispitiNajboljegStudenta);
@@ -59,7 +60,7 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 		}
 
 		for (Student student : sviStudenti) {
-			Ispit[] ispitiStudenta = filtrirajIspitePoStudentu(sviIspiti, student);
+			List<Ispit> ispitiStudenta = filtrirajIspitePoStudentu(sviIspiti, student);
 
 			BigDecimal prosjecnaOcjenaStudenta = new BigDecimal("0");
 
@@ -90,39 +91,42 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 	@Override
 	public Student odrediNajuspjesnijegStudentaNaGodini(int godina) {
 
-		Ispit[] sviIspiti = getIspiti();
-		Ispit[] ispitiSaGodine = new Ispit[sviIspiti.length];
+		List<Ispit> sviIspiti = getIspiti();
+		List<Ispit> ispitiSaGodine = new ArrayList<Ispit>();
+//		Ispit[] ispitiSaGodine = new Ispit[sviIspiti.length];
 
 		int brojac = 0;
 
 		for (Ispit x : sviIspiti) {
 			if (x.getDatumIVrijeme().getYear() == godina) {
-				ispitiSaGodine[brojac++] = x;
+				ispitiSaGodine.add(x);
+//				ispitiSaGodine[brojac++] = x;
 			}
 		}
 
-		Ispit[] filtriraniIspitiSaGodine = Arrays.copyOf(ispitiSaGodine, brojac);
+//		Ispit[] filtriraniIspitiSaGodine = Arrays.copyOf(ispitiSaGodine, brojac);
+		List<Ispit> filtriraniIspitiSaGodine = ispitiSaGodine;
 
-		Student[] sviStudenti = getStudenti();
+		List<Student> sviStudenti = getStudenti();
 
-		Student najuspjesnijiStudent = sviStudenti[0];
+		Student najuspjesnijiStudent = sviStudenti.get(0);
 
-		Ispit[] ispitiNajboljegStudenta = filtrirajIspitePoStudentu(filtriraniIspitiSaGodine, najuspjesnijiStudent);
+		List<Ispit> ispitiNajboljegStudenta = filtrirajIspitePoStudentu(filtriraniIspitiSaGodine, najuspjesnijiStudent);
 
 		int brojacOdlicnihOcjenaNajboljegStudenta = 0;
 
-		for (int i = 0; i < ispitiNajboljegStudenta.length; i++) {
-			if (ispitiNajboljegStudenta[i].getOcjena() == 5) {
+		for (int i = 0; i < ispitiNajboljegStudenta.size(); i++) {
+			if (ispitiNajboljegStudenta.get(i).getOcjena() == 5) {
 				brojacOdlicnihOcjenaNajboljegStudenta = brojacOdlicnihOcjenaNajboljegStudenta + 1;
 			}
 		}
 
 		for (Student student : sviStudenti) {
-			Ispit[] ispitiStudenta = filtrirajIspitePoStudentu(filtriraniIspitiSaGodine, student);
+			List<Ispit> ispitiStudenta = filtrirajIspitePoStudentu(filtriraniIspitiSaGodine, student);
 
 			int brojacOdlicnihOcjenaStudenta = 0;
-			for (int i = 0; i < ispitiStudenta.length; i++) {
-				if (ispitiStudenta[i].getOcjena() == 5) {
+			for (int i = 0; i < ispitiStudenta.size(); i++) {
+				if (ispitiStudenta.get(i).getOcjena() == 5) {
 					brojacOdlicnihOcjenaStudenta = brojacOdlicnihOcjenaStudenta + 1;
 				}
 			}
