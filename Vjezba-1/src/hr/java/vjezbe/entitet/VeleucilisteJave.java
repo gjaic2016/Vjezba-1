@@ -1,7 +1,8 @@
 package hr.java.vjezbe.entitet;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,15 +14,15 @@ public class VeleucilisteJave extends ObrazovnaUstanova implements Visokoskolska
 
 	public static final Logger logger = LoggerFactory.getLogger(Glavna.class);
 
-	public VeleucilisteJave(String naziv, Predmet[] predmeti, Profesor[] profesori, Student[] studenti,
-			Ispit[] ispiti) {
+	public VeleucilisteJave(String naziv, List<Predmet> predmeti, List<Profesor> profesori, List<Student> studenti,
+			List<Ispit> ispiti) {
 		super(naziv, predmeti, profesori, studenti, ispiti);
 
 	}
 
 	@Override
-	public BigDecimal izracunajKonacnuOcjenuStudijaZaStudenta(Ispit[] ispiti, Integer ocjenaPismenogDjelaZavrsnogRada,
-			Integer ocjenaObraneZavrsnogRada) {
+	public BigDecimal izracunajKonacnuOcjenuStudijaZaStudenta(List<Ispit> ispiti,
+			Integer ocjenaPismenogDjelaZavrsnogRada, Integer ocjenaObraneZavrsnogRada) {
 
 		BigDecimal bd2 = new BigDecimal("2");
 		BigDecimal bd4 = new BigDecimal("4");
@@ -42,24 +43,36 @@ public class VeleucilisteJave extends ObrazovnaUstanova implements Visokoskolska
 	@Override
 	public Student odrediNajuspjesnijegStudentaNaGodini(int godina) {
 
-		Ispit[] sviIspiti = getIspiti();
-		Ispit[] ispitiSaGodine = new Ispit[sviIspiti.length];
+		List<Ispit> sviIspiti = getIspiti();
+		List<Ispit> ispitiSaGodine = new ArrayList<Ispit>();
 
 		int brojac = 0;
 
 		for (Ispit x : sviIspiti) {
 			if (x.getDatumIVrijeme().getYear() == godina) {
-				ispitiSaGodine[brojac++] = x;
+				ispitiSaGodine.add(x);
 			}
 		}
 
-		Ispit[] filtriraniIspitiSaGodine = Arrays.copyOf(ispitiSaGodine, brojac);
+		List<Ispit> filtriraniIspitiSaGodine = ispitiSaGodine;
 
-		Student[] sviStudenti = getStudenti();
+//		int brojacPolja = 0;
+//		Student[] studentiKojiSuIzasliNaIspit = new Student[getIspiti().size()];
+//		for (Ispit ispit : getIspiti()) {
+//			studentiKojiSuIzasliNaIspit[brojacPolja++] = ispit.getStudent();
+//		}
+//		Student[] sviStudenti = studentiKojiSuIzasliNaIspit;
+////		List<Student> sviStudenti = getStudenti();
+//		Student najuspjesnijiStudent = sviStudenti[0];
 
-		Student najuspjesnijiStudent = sviStudenti[0];
+		List<Student> studentiKojiSuIzasliNaIspit = new ArrayList<Student>();
+		for (Ispit ispit : getIspiti()) {
+			studentiKojiSuIzasliNaIspit.add(ispit.getStudent());
+		}
+		List<Student> sviStudenti = new ArrayList<Student>(studentiKojiSuIzasliNaIspit);
+		Student najuspjesnijiStudent = studentiKojiSuIzasliNaIspit.get(0);
 
-		Ispit[] ispitiNajboljegStudenta = filtrirajIspitePoStudentu(filtriraniIspitiSaGodine, najuspjesnijiStudent);
+		List<Ispit> ispitiNajboljegStudenta = filtrirajIspitePoStudentu(filtriraniIspitiSaGodine, najuspjesnijiStudent);
 
 		BigDecimal prosjekNajboljegStudenta = new BigDecimal("0");
 		try {
@@ -70,7 +83,7 @@ public class VeleucilisteJave extends ObrazovnaUstanova implements Visokoskolska
 		}
 
 		for (Student student : sviStudenti) {
-			Ispit[] ispitiStudenta = filtrirajIspitePoStudentu(filtriraniIspitiSaGodine, student);
+			List<Ispit> ispitiStudenta = filtrirajIspitePoStudentu(filtriraniIspitiSaGodine, student);
 			BigDecimal prosjecnaOcjenaStudenta = new BigDecimal("0");
 			try {
 				prosjecnaOcjenaStudenta = odrediProsjekOcjenaNaIspitima(ispitiStudenta);

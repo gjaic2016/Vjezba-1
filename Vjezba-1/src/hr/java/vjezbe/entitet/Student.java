@@ -45,4 +45,35 @@ public class Student extends Osoba {
 		this.datumRodenja = datumRodenja;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((datumRodenja == null) ? 0 : datumRodenja.hashCode());
+		result = prime * result + ((jmbag == null) ? 0 : jmbag.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		if (datumRodenja == null) {
+			if (other.datumRodenja != null)
+				return false;
+		} else if (!datumRodenja.equals(other.datumRodenja))
+			return false;
+		if (jmbag == null) {
+			if (other.jmbag != null)
+				return false;
+		} else if (!jmbag.equals(other.jmbag))
+			return false;
+		return true;
+	}
+
 }
