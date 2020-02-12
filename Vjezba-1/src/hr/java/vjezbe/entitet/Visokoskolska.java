@@ -18,6 +18,12 @@ public interface Visokoskolska {
 		BigDecimal sumeOcjena = new BigDecimal(0);
 
 //		Ispit[] filtriraniIspiti = filtrirajPolozeneIspite(ispiti);
+		List<Ispit> filtriraniIspiti = filtrirajPolozeneIspite(ispiti);
+
+		// FAILSAFE
+		if (filtriraniIspiti.size() == 0) {
+			return new BigDecimal(0);
+		}
 
 		for (Ispit x : ispiti) {
 			if (x.getOcjena() == 1) {

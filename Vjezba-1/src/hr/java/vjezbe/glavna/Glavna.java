@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.InputMismatchException;
@@ -24,6 +25,7 @@ import hr.java.vjezbe.entitet.Predmet;
 import hr.java.vjezbe.entitet.Profesor;
 import hr.java.vjezbe.entitet.Student;
 import hr.java.vjezbe.entitet.VeleucilisteJave;
+import hr.java.vjezbe.sortiranje.StudentSorter;
 
 /**
  * @author Fluffy @
@@ -161,6 +163,15 @@ public class Glavna {
 				}
 			}
 
+			List<Student> sortedStudent = null;
+			for (int t = 0; t < predmeti.size(); t++) {
+				System.out.println("\nStudenti na predmetu " + predmeti.get(t).getNaziv() + " su: ");
+				sortedStudent = new ArrayList<>(predmeti.get(t).getStudent());
+				Collections.sort(sortedStudent, new StudentSorter());
+				for (Student stud : sortedStudent) {
+					System.out.println(stud.getPrezime() + " " + stud.getIme());
+				}
+			}
 //			???
 //			for (int t = 0; t < predmeti.size(); t++) {
 //				System.out.println("\nStudenti na predmetu " + predmeti.get(t).getNaziv() + " su: ");
@@ -334,7 +345,7 @@ public class Glavna {
 
 		List<Ispit> ispiti = new ArrayList<>();
 
-		for (int i = 0; i < ispiti.size(); i++) {
+		for (int i = 0; i < brojIspitnihRokova; i++) {
 
 			System.out.println("Unesite " + (i + 1) + " ispitni rok:");
 
@@ -405,13 +416,17 @@ public class Glavna {
 
 	private static List<Student> unesiStudenta(Scanner skener, List<Predmet> predmeti) {
 
+		List<Student> studentiLista = new ArrayList<Student>();
+
+		Student student = null;
+
 		for (int i = 0; i < predmeti.size(); i++) {
 
 			int brojStudenata = predmeti.get(i).getStudent().size();
 
 			System.out.println("Unesite studente za predmet " + predmeti.get(i).getNaziv());
 
-			Set<Student> noviStudent = new HashSet<Student>();
+			Set<Student> noviStudentSet = new HashSet<Student>();
 
 			for (int j = 0; j < brojStudenata; j++) {
 
@@ -443,41 +458,16 @@ public class Glavna {
 
 				} while (provjeraWhilePetlja);
 
-//				noviStudent[j] = new Student(ime, prezime, jmbag, datumRodjenja);
-				noviStudent.add(new Student(ime, prezime, jmbag, datumRodjenja));
-				predmeti.get(i).setStudent(noviStudent);
+				student = new Student(ime, prezime, jmbag, datumRodjenja);
+				noviStudentSet.add(student);
+				studentiLista.add(student);
+//				noviStudentSet.add(new Student(ime, prezime, jmbag, datumRodjenja));
+//				predmeti.get(i).setStudent(noviStudentSet);
 			}
-//			predmeti[i].setStudenti(noviStudent);
+			predmeti.get(i).setStudent(noviStudentSet);
 		}
 
-		int ukupanBrojStudenta = 0;
-
-		for (Predmet pred : predmeti) {
-			int velicinaPoljaStudenta = pred.getStudent().size();
-			// ukupanBrojStudenta += velicinaPoljaStudenta;
-			ukupanBrojStudenta = ukupanBrojStudenta + velicinaPoljaStudenta;
-		}
-
-		List<Student> student = new ArrayList<Student>();
-
-//		int k = 0;
-		for (Predmet pred : predmeti) {
-			List<Student> studentiPredmeta = new ArrayList<Student>(pred.getStudent());
-
-			for (int k2 = 0; k2 < studentiPredmeta.size(); k2++) {
-				Student studentPredmeta = studentiPredmeta.get(1); // OVDJE PUCA
-				student.add(studentPredmeta);
-			}
-
-//			for (Student stud : pred.getStudent()) {
-			// for (int k = 0; k < student.length; k++) {
-//				student[k++] = stud;
-			// }
-//			}
-
-		}
-
-		return student;
+		return studentiLista;
 
 	}
 
@@ -559,7 +549,7 @@ public class Glavna {
 
 			Predmet myPredmet = new Predmet(sifra, naziv, brojEctsBodova, odabraniProfesor);
 			for (int j = 0; j < brojStudenata; j++) {
-				myPredmet.getStudent().add(new Student(null, null, null, null));
+				myPredmet.getStudent().add(new Student(null, null, String.valueOf(j), null));
 			}
 
 			predmeti.add(myPredmet);
