@@ -9,10 +9,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.InputMismatchException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import hr.java.vjezbe.entitet.Ocjena;
 import hr.java.vjezbe.entitet.Predmet;
 import hr.java.vjezbe.entitet.Profesor;
 import hr.java.vjezbe.entitet.Student;
+import hr.java.vjezbe.entitet.Sveuciliste;
 import hr.java.vjezbe.entitet.VeleucilisteJave;
 import hr.java.vjezbe.sortiranje.StudentSorter;
 
@@ -64,7 +67,7 @@ public class Glavna {
 			}
 		} while (provjeraWhilePetlja);
 
-		List<ObrazovnaUstanova> obrazovnaUstanovaLista = new ArrayList<>();
+		Sveuciliste<ObrazovnaUstanova> obrazovnaUstanovaLista = new Sveuciliste<>();
 
 		for (int i = 0; i < brojObrazovnihUstanova; i++) {
 
@@ -151,34 +154,43 @@ public class Glavna {
 
 			List<Ispit> ispiti = unesiIspit(skener, brojIspitnihRokova, predmeti, studenti);
 
-			// TEST SORTIRANJA
-//			Arrays.sort(ispiti, (a, b) -> b.getOcjena().compareTo(a.getOcjena()));
-//			Arrays.sort(ispiti, (a, b) -> a.getStudent().getIme().compareTo(b.getStudent().getIme()));
-//			Arrays.sort(ispiti, (a, b) -> a.getStudent().getPrezime().compareTo(b.getStudent().getPrezime()));
-
-			for (Ispit x : ispiti) {
-				if (x.getOcjena().equals(5)) {
-					System.out.println("Student " + x.getStudent().getPrezime() + " " + x.getStudent().getIme()
-							+ " je dobio ocjenu " + Ocjena.IZVRSTAN + "na predmetu: " + x.getPredmet().getNaziv());
-				}
-			}
-
-			List<Student> sortedStudent = null;
-			for (int t = 0; t < predmeti.size(); t++) {
-				System.out.println("\nStudenti na predmetu " + predmeti.get(t).getNaziv() + " su: ");
-				sortedStudent = new ArrayList<>(predmeti.get(t).getStudent());
-				Collections.sort(sortedStudent, new StudentSorter());
-				for (Student stud : sortedStudent) {
-					System.out.println(stud.getPrezime() + " " + stud.getIme());
-				}
-			}
-//			???
-//			for (int t = 0; t < predmeti.size(); t++) {
-//				System.out.println("\nStudenti na predmetu " + predmeti.get(t).getNaziv() + " su: ");
-//				for (int p = 0; p < predmeti.get(p).getStudent().size(); p++) {
-//					System.out.println(predmeti.get(t).getStudent());
+//			for (Ispit x : ispiti) {
+//				if (x.getOcjena().equals(5)) {
+//					System.out.println("Student " + x.getStudent().getPrezime() + " " + x.getStudent().getIme()
+//							+ " je dobio ocjenu " + Ocjena.IZVRSTAN + "na predmetu: " + x.getPredmet().getNaziv());
 //				}
 //			}
+
+			// lambda verzija petlje za ispis studenta koji ima ocjenu izvrstan na ispitu
+			ispiti.stream().filter(ispit -> ispit.getOcjena().equals(Ocjena.IZVRSTAN.getOcjenaInt()))
+					.collect(Collectors.toCollection(LinkedList::new))
+					.forEach(filteredIspiti -> System.out.println("Student " + filteredIspiti.getStudent().getPrezime()
+							+ " " + filteredIspiti.getStudent().getIme() + "je dobio: "
+							+ Ocjena.IZVRSTAN.getOcjenaString() + " na predmetu: "
+							+ filteredIspiti.getPredmet().getNaziv()));
+
+//			List<Student> sortedStudent = null;
+//			for (int t = 0; t < predmeti.size(); t++) {
+//				System.out.println("\nStudenti na predmetu " + predmeti.get(t).getNaziv() + " su: ");
+//				sortedStudent = new ArrayList<>(predmeti.get(t).getStudent());
+//				Collections.sort(sortedStudent, new StudentSorter());
+//				for (Student stud : sortedStudent) {
+//					System.out.println(stud.getPrezime() + " " + stud.getIme());
+//				}
+//			}
+
+			// 1. verzija lambda izraza ispisa studenata po predmetu
+			predmeti.forEach(predmet -> predmet.getStudent().stream().sorted(new StudentSorter())
+					.forEach(student -> System.out.println("Studenti na predmetu: " + predmet.getNaziv() + " su: "
+							+ student.getIme() + " " + student.getPrezime())));
+
+			// 2. verzija lambda izraza ispisa studenata po predmetu
+			predmeti.stream().forEach(p -> {
+				System.out.println("Studenti na predmetu " + p.getNaziv() + " su: ");
+				List<Student> sortedStudentLambda = new ArrayList<>(p.getStudent());
+				Collections.sort(sortedStudentLambda, new StudentSorter());
+				sortedStudentLambda.forEach(s -> System.out.println(s.getPrezime() + " " + s.getIme()));
+			});
 
 			// ODABIR USTANOVE
 			int odabirUstanove = 0;
@@ -261,7 +273,7 @@ public class Glavna {
 						+ veleucilisteJave.odrediNajuspjesnijegStudentaNaGodini(GODINA).getJmbag());
 
 				veleucilisteJave.setNaziv(nazivObrazovneUstanove);
-				obrazovnaUstanovaLista.add(veleucilisteJave);
+				obrazovnaUstanovaLista.dodajObrazovnuUstanovu(veleucilisteJave);
 
 			} else if (odabirUstanove == 2) {
 
@@ -329,13 +341,19 @@ public class Glavna {
 							+ fakultetRacunalstva.odrediStudentaZaRektorovuNagradu().getJmbag());
 
 					fakultetRacunalstva.setNaziv(nazivObrazovneUstanove);
-					obrazovnaUstanovaLista.add(fakultetRacunalstva);
+					obrazovnaUstanovaLista.dodajObrazovnuUstanovu(fakultetRacunalstva);
 
 				}
 
 			}
 
 		}
+
+		obrazovnaUstanovaLista.getListaSveuciliste().stream()
+				.sorted((o1, o2) -> Integer.compare(o1.getStudenti().size(), o2.getStudenti().size()))
+				.forEach(s -> System.out.println("Sortirane obrazovne ustanove prema broju studenata: \n" + s.getNaziv()
+						+ ": Broj studenta: " + s.getStudenti().size()));
+
 		skener.close();
 
 	}

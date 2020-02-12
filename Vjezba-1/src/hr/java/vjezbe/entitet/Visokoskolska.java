@@ -76,12 +76,15 @@ public interface Visokoskolska {
 
 		List<Ispit> filtrirajIspitPoStudentu = new ArrayList<Ispit>();
 
-		for (Ispit x : ispiti) {
-			if (x.getStudent().getJmbag().equals(x.getStudent().getJmbag())) {
-				filtrirajIspitPoStudentu.add(x);
-			}
+		ispiti.stream().filter(fStudent -> fStudent.getStudent().getJmbag().equals(student.getJmbag()))
+				.forEach(i -> filtrirajIspitPoStudentu.add(i));
 
-		}
+//		for (Ispit x : ispiti) {
+//			if (x.getStudent().getJmbag().equals(x.getStudent().getJmbag())) {
+//				filtrirajIspitPoStudentu.add(x);
+//			}
+//
+//		}
 
 //		filtrirajIspitPoStudentu = Arrays.copyOf(filtrirajIspitPoStudentu, brojac);
 		return filtrirajIspitPoStudentu;
