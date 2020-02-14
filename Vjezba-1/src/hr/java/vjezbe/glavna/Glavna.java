@@ -216,9 +216,9 @@ public class Glavna {
 
 				System.out.println("Unesite naziv obrazovne ustanove: ");
 				String nazivObrazovneUstanove = skener.nextLine();
-
-				VeleucilisteJave veleucilisteJave = new VeleucilisteJave(nazivObrazovneUstanove, predmeti, profesori,
-						studenti, ispiti);
+				Long id = null;
+				VeleucilisteJave veleucilisteJave = new VeleucilisteJave(id, nazivObrazovneUstanove, predmeti,
+						profesori, studenti, ispiti);
 
 				for (Student x : veleucilisteJave.getStudenti()) {
 
@@ -279,8 +279,8 @@ public class Glavna {
 
 				System.out.println("Unesite naziv obrazovne ustanove: ");
 				String nazivObrazovneUstanove = skener.nextLine();
-
-				FakultetRacunalstva fakultetRacunalstva = new FakultetRacunalstva(nazivObrazovneUstanove, predmeti,
+				Long id = null;
+				FakultetRacunalstva fakultetRacunalstva = new FakultetRacunalstva(id, nazivObrazovneUstanove, predmeti,
 						profesori, studenti, ispiti);
 
 				for (Student x : fakultetRacunalstva.getStudenti()) {
@@ -411,7 +411,8 @@ public class Glavna {
 			LocalDateTime datumIVrijemeIspita = LocalDateTime.parse(datumIVrijemeString, formatter);
 
 //			ispiti[i] = new Ispit(odabraniPredmet, odabraniStudent, ocjena, datumIVrijemeIspita);
-			ispiti.add(new Ispit(odabraniPredmet, odabraniStudent, ocjena, datumIVrijemeIspita));
+			Long id = null;
+			ispiti.add(new Ispit(id, odabraniPredmet, odabraniStudent, ocjena, datumIVrijemeIspita));
 		}
 
 		return ispiti;
@@ -476,7 +477,8 @@ public class Glavna {
 
 				} while (provjeraWhilePetlja);
 
-				student = new Student(ime, prezime, jmbag, datumRodjenja);
+				Long id = null;
+				student = new Student(id, ime, prezime, jmbag, datumRodjenja);
 				noviStudentSet.add(student);
 				studentiLista.add(student);
 //				noviStudentSet.add(new Student(ime, prezime, jmbag, datumRodjenja));
@@ -565,9 +567,10 @@ public class Glavna {
 				}
 			} while (provjeraWhilePetlja);
 
-			Predmet myPredmet = new Predmet(sifra, naziv, brojEctsBodova, odabraniProfesor);
+			Long id = null;
+			Predmet myPredmet = new Predmet(id, sifra, naziv, brojEctsBodova, odabraniProfesor);
 			for (int j = 0; j < brojStudenata; j++) {
-				myPredmet.getStudent().add(new Student(null, null, String.valueOf(j), null));
+				myPredmet.getStudent().add(new Student(id, null, null, String.valueOf(j), null));
 			}
 
 			predmeti.add(myPredmet);
@@ -595,7 +598,8 @@ public class Glavna {
 			String titula = skener.nextLine();
 
 //			profesori[i] = new Profesor(sifra, ime, prezime, titula);
-			profesori.add(new Profesor(sifra, ime, prezime, titula));
+			Long id = null;
+			profesori.add(new Profesor(id, sifra, ime, prezime, titula));
 		}
 
 		return profesori;

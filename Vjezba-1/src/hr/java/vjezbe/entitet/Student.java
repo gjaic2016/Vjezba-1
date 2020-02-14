@@ -7,8 +7,8 @@ public class Student extends Osoba {
 	private String jmbag;
 	private LocalDate datumRodenja;
 
-	public Student(String ime, String prezime, String jmbag, LocalDate datumRodenja) {
-		super(ime, prezime);
+	public Student(Long id, String ime, String prezime, String jmbag, LocalDate datumRodenja) {
+		super(id, ime, prezime);
 		this.jmbag = jmbag;
 		this.datumRodenja = datumRodenja;
 	}

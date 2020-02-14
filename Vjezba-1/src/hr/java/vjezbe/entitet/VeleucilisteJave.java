@@ -14,9 +14,9 @@ public class VeleucilisteJave extends ObrazovnaUstanova implements Visokoskolska
 
 	public static final Logger logger = LoggerFactory.getLogger(Glavna.class);
 
-	public VeleucilisteJave(String naziv, List<Predmet> predmeti, List<Profesor> profesori, List<Student> studenti,
-			List<Ispit> ispiti) {
-		super(naziv, predmeti, profesori, studenti, ispiti);
+	public VeleucilisteJave(Long id, String naziv, List<Predmet> predmeti, List<Profesor> profesori,
+			List<Student> studenti, List<Ispit> ispiti) {
+		super(id, naziv, predmeti, profesori, studenti, ispiti);
 
 	}
 
@@ -46,7 +46,7 @@ public class VeleucilisteJave extends ObrazovnaUstanova implements Visokoskolska
 		List<Ispit> sviIspiti = getIspiti();
 		List<Ispit> ispitiSaGodine = new ArrayList<Ispit>();
 
-		int brojac = 0;
+//		int brojac = 0;
 
 		for (Ispit x : sviIspiti) {
 			if (x.getDatumIVrijeme().getYear() == godina) {

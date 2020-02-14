@@ -15,9 +15,9 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 
 	public static final Logger logger = LoggerFactory.getLogger(Glavna.class);
 
-	public FakultetRacunalstva(String naziv, List<Predmet> predmeti, List<Profesor> profesori, List<Student> studenti,
-			List<Ispit> ispiti) {
-		super(naziv, predmeti, profesori, studenti, ispiti);
+	public FakultetRacunalstva(Long id, String naziv, List<Predmet> predmeti, List<Profesor> profesori,
+			List<Student> studenti, List<Ispit> ispiti) {
+		super(id, naziv, predmeti, profesori, studenti, ispiti);
 
 	}
 
@@ -95,7 +95,7 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 		List<Ispit> ispitiSaGodine = new ArrayList<Ispit>();
 //		Ispit[] ispitiSaGodine = new Ispit[sviIspiti.length];
 
-		int brojac = 0;
+//		int brojac = 0;
 
 		for (Ispit x : sviIspiti) {
 			if (x.getDatumIVrijeme().getYear() == godina) {
