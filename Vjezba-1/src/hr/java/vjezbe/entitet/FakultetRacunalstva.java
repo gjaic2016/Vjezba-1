@@ -85,6 +85,9 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 			}
 		}
 
+		System.out.println("Student izabran je za rektorovu nagradu je " + najuspjesnijiStudent.getIme() + " "
+				+ najuspjesnijiStudent.getPrezime() + ", JMBAG: " + najuspjesnijiStudent.getJmbag());
+
 		return najuspjesnijiStudent;
 	}
 
@@ -132,6 +135,9 @@ public class FakultetRacunalstva extends ObrazovnaUstanova implements Diplomski 
 			}
 		}
 
+		System.out.println("Najuspjesniji student 'Fakultet Racunalstva', " + godina + ". godine je "
+				+ najuspjesnijiStudent.getIme() + " " + najuspjesnijiStudent.getPrezime() + ", JMBAG: "
+				+ najuspjesnijiStudent.getJmbag());
 		return najuspjesnijiStudent;
 
 	}

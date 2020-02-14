@@ -98,6 +98,9 @@ public class VeleucilisteJave extends ObrazovnaUstanova implements Visokoskolska
 			}
 
 		}
+		System.out.println(
+				"Najuspjesniji student 'Veleucilista Jave', " + godina + ". godine je " + najuspjesnijiStudent.getIme()
+						+ " " + najuspjesnijiStudent.getPrezime() + ", JMBAG: " + najuspjesnijiStudent.getJmbag());
 
 		return najuspjesnijiStudent;
 	}
