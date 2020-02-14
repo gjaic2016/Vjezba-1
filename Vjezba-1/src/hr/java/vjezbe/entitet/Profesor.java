@@ -5,8 +5,8 @@ public class Profesor extends Osoba {
 	private String sifra;
 	private String titula;
 
-	public Profesor(String sifra, String ime, String prezime, String titula) {
-		super(ime, prezime);
+	public Profesor(Long id, String sifra, String ime, String prezime, String titula) {
+		super(id, ime, prezime);
 		this.sifra = sifra;
 		this.titula = titula;
 	}

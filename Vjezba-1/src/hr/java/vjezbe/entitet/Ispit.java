@@ -2,15 +2,15 @@ package hr.java.vjezbe.entitet;
 
 import java.time.LocalDateTime;
 
-public class Ispit {
+public class Ispit extends Entitet {
 
 	private Predmet predmet;
 	private Student student;
 	private Integer ocjena;
 	private LocalDateTime datumIVrijeme;
 
-	public Ispit(Predmet predmet, Student student, Integer ocjena, LocalDateTime datumIVrijeme) {
-		super();
+	public Ispit(Long id, Predmet predmet, Student student, Integer ocjena, LocalDateTime datumIVrijeme) {
+		super(id);
 		this.predmet = predmet;
 		this.student = student;
 		this.ocjena = ocjena;
