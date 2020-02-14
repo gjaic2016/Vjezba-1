@@ -9,16 +9,27 @@ public class Predmet extends Entitet {
 	private String naziv;
 	private Integer brojEctsBodova;
 	private Profesor nositelj;
+	private Integer brojStudenata;
 //	private Student[] studenti;
 	private Set<Student> studenti = new HashSet<Student>();
 
-	public Predmet(Long id, String sifra, String naziv, Integer brojEctsBodova, Profesor nositelj) {
+	public Predmet(Long id, String sifra, String naziv, Integer brojEctsBodova, Profesor nositelj,
+			Integer brojStudenata) {
 		super(id);
 		this.sifra = sifra;
 		this.naziv = naziv;
 		this.brojEctsBodova = brojEctsBodova;
 		this.nositelj = nositelj;
+		this.brojStudenata = brojStudenata;
 //		this.studenti = new Student[brojStudenata];
+	}
+
+	public Integer getBrojStudenata() {
+		return brojStudenata;
+	}
+
+	public void setBrojStudenata(Integer brojStudenata) {
+		this.brojStudenata = brojStudenata;
 	}
 
 	public String getSifra() {

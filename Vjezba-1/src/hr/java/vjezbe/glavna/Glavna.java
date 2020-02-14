@@ -568,7 +568,7 @@ public class Glavna {
 			} while (provjeraWhilePetlja);
 
 			Long id = null;
-			Predmet myPredmet = new Predmet(id, sifra, naziv, brojEctsBodova, odabraniProfesor);
+			Predmet myPredmet = new Predmet(id, sifra, naziv, brojEctsBodova, odabraniProfesor, brojStudenata);
 			for (int j = 0; j < brojStudenata; j++) {
 				myPredmet.getStudent().add(new Student(id, null, null, String.valueOf(j), null));
 			}
