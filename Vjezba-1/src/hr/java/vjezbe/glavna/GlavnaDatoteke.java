@@ -82,16 +82,16 @@ public class GlavnaDatoteke {
 
 				for (Predmet predmet : vj.getPredmeti()) {
 
-//					System.out.println("Studenti upisani na predmet " + predmet.getNaziv() + " su: ");
+					System.out.println("Studenti upisani na predmet " + predmet.getNaziv() + " su: ");
 
-					System.out.printf("Studenti upisani na predmet %s su:%n", predmet.getNaziv());
-					predmet.getStudent().stream().sorted(new StudentSorter()).forEach(System.out::println);
-//					for (Student stud : predmet.getStudent()) {
+					//System.out.printf("Studenti upisani na predmet %s su:%n", predmet.getNaziv());
+					//predmet.getStudent().stream().sorted(new StudentSorter()).forEach(System.out::println);
+					for (Student stud : predmet.getStudent()) {
 //						if (stud.getId().equals(predmet.getStudent())) {
-//							System.out.println(stud.getIme() + " " + stud.getPrezime());
-//
+							System.out.println(stud.getIme() + " " + stud.getPrezime());
+
 //						}
-//					}
+					}
 				}
 
 				for (Student stud : vj.getStudenti()) {
@@ -220,6 +220,7 @@ public class GlavnaDatoteke {
 
 			Predmet predmet = new Predmet(Long.parseLong(idPredmeta), sifraPredmeta, nazivPredmeta, brojEctsBodova,
 					nositeljPredmeta, brojStudenata);
+			predmet.setStudent(setStudenata);
 
 			listaPredmeta.add(predmet);
 		}
@@ -285,11 +286,11 @@ public class GlavnaDatoteke {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH:mm");
 			LocalDateTime datumIVrijemeIspita = LocalDateTime.parse(datumIVrijemeIspitaString, formatter);
 
-			// potražiti u profesorima, profesora pot tim ID-jem, dohvatitit ga i upucati u
+			// potraï¿½iti u profesorima, profesora pot tim ID-jem, dohvatitit ga i upucati u
 			// konstruktor od Predmeta
 			Predmet predmet = predmeti.stream().filter(p -> p.getId().equals(odabirPredmetaIspita)).findFirst().get();
 
-			// potražiti u studentima , studenta pot tim ID-jem, dohvatitit ga i upucati u
+			// potraï¿½iti u studentima , studenta pot tim ID-jem, dohvatitit ga i upucati u
 			// konstruktor od Predmeta
 			Student student = studenti.stream().filter(p -> p.getId().equals(odabirStudentaIspita)).findFirst().get();
 
