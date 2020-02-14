@@ -1,8 +1,10 @@
 package hr.java.vjezbe.glavna;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -25,7 +27,6 @@ import hr.java.vjezbe.entitet.Profesor;
 import hr.java.vjezbe.entitet.Student;
 import hr.java.vjezbe.entitet.Sveuciliste;
 import hr.java.vjezbe.entitet.VeleucilisteJave;
-import hr.java.vjezbe.sortiranje.StudentSorter;
 
 public class GlavnaDatoteke {
 
@@ -48,6 +49,8 @@ public class GlavnaDatoteke {
 	private static final String FILE_OBRAZOVNE_USTANOVE = "dat\\obrazovneUstanove.txt";
 
 	private static final File SERIALIZIRANI_PROFESORI = new File("dat\\profesori.dat");
+	private static final File SERIALIZIRANI_STUDENTI = new File("dat\\studenti.dat");
+	private static final File SERIALIZIRANE_USTANOVE = new File("dat\\obrazovneUstanove2.dat");
 
 	public static void main(String[] args) {
 
@@ -58,10 +61,15 @@ public class GlavnaDatoteke {
 		List<Profesor> profesori = dohvatiProfesore();
 //		serijalizirajProfesore(profesori);
 		List<Student> studenti = dohvatiStudente();
+//		serijalizirajStudente(studenti);
 		List<Predmet> predmeti = dohvatiPredmete(profesori, studenti);
 		List<Ispit> ispiti = dohvatiIspite(predmeti, studenti);
 
 		Sveuciliste<ObrazovnaUstanova> sveuciliste = dohvatiSveuciliste(profesori, predmeti, studenti, ispiti);
+
+//		serijalizirajUstanove(sveuciliste);
+
+//		deserijalizirajUstanove();
 
 		List<ObrazovnaUstanova> lou = sveuciliste.getListaSveuciliste();
 
@@ -84,11 +92,13 @@ public class GlavnaDatoteke {
 
 					System.out.println("Studenti upisani na predmet " + predmet.getNaziv() + " su: ");
 
-					//System.out.printf("Studenti upisani na predmet %s su:%n", predmet.getNaziv());
-					//predmet.getStudent().stream().sorted(new StudentSorter()).forEach(System.out::println);
+					// System.out.printf("Studenti upisani na predmet %s su:%n",
+					// predmet.getNaziv());
+					// predmet.getStudent().stream().sorted(new
+					// StudentSorter()).forEach(System.out::println);
 					for (Student stud : predmet.getStudent()) {
 //						if (stud.getId().equals(predmet.getStudent())) {
-							System.out.println(stud.getIme() + " " + stud.getPrezime());
+						System.out.println(stud.getIme() + " " + stud.getPrezime());
 
 //						}
 					}
@@ -286,7 +296,8 @@ public class GlavnaDatoteke {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH:mm");
 			LocalDateTime datumIVrijemeIspita = LocalDateTime.parse(datumIVrijemeIspitaString, formatter);
 
-			// potra�iti u profesorima, profesora pot tim ID-jem, dohvatitit ga i upucati u
+			// potra�iti u profesorima, profesora pot tim ID-jem, dohvatitit ga i upucati
+			// u
 			// konstruktor od Predmeta
 			Predmet predmet = predmeti.stream().filter(p -> p.getId().equals(odabirPredmetaIspita)).findFirst().get();
 
@@ -402,6 +413,50 @@ public class GlavnaDatoteke {
 			e.printStackTrace();
 		}
 
+	}
+
+	private static void serijalizirajStudente(List<Student> studenti) {
+
+		System.out.println("..ulazak u metodu serijalizacije studenata...");
+
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SERIALIZIRANI_STUDENTI));
+			for (Student stud : studenti) {
+				out.writeObject(stud);
+			}
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void serijalizirajUstanove(Sveuciliste<ObrazovnaUstanova> sveuciliste) {
+		System.out.println("Serijalizacija obrazovne-ustanove.dat.");
+
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SERIALIZIRANE_USTANOVE));
+			out.writeObject(sveuciliste);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void deserijalizirajUstanove() {
+		System.out.println("Deserijalizacija obrazovne-ustanove.dat:");
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SERIALIZIRANE_USTANOVE))) {
+			Sveuciliste sveuciliste = (Sveuciliste) in.readObject();
+
+			System.out.printf("Profesori na %s su %s%n", sveuciliste.dohvatiObrazovnuUstanovu(0).getNaziv(),
+					sveuciliste.dohvatiObrazovnuUstanovu(0).getProfesori());
+
+			System.out.printf("Profesori na %s su %s%n", sveuciliste.dohvatiObrazovnuUstanovu(1).getNaziv(),
+					sveuciliste.dohvatiObrazovnuUstanovu(1).getProfesori());
+
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,9 +1,10 @@
 package hr.java.vjezbe.entitet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sveuciliste<T extends ObrazovnaUstanova> {
+public class Sveuciliste<T extends ObrazovnaUstanova> implements Serializable {
 
 	private List<T> listaSveuciliste = new ArrayList<T>();
 

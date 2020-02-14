@@ -4,6 +4,10 @@ import java.util.List;
 
 public abstract class ObrazovnaUstanova extends Entitet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2656645014507341978L;
 	private String naziv;
 	private List<Predmet> predmeti;
 	private List<Profesor> profesori;
