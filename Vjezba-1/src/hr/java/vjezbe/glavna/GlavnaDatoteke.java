@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,6 +25,7 @@ import hr.java.vjezbe.entitet.Profesor;
 import hr.java.vjezbe.entitet.Student;
 import hr.java.vjezbe.entitet.Sveuciliste;
 import hr.java.vjezbe.entitet.VeleucilisteJave;
+import hr.java.vjezbe.sortiranje.StudentSorter;
 
 public class GlavnaDatoteke {
 
@@ -34,7 +36,7 @@ public class GlavnaDatoteke {
 	public static final Integer DOVOLJAN = 2;
 
 	private static final int BROJ_LINIJA_PROFESORA = 5;
-	private static final int BROJ_LINIJA_PREDMETA = 6;
+	private static final int BROJ_LINIJA_PREDMETA = 7;
 	public static final int BROJ_LINIJA_STUDENATA = 5;
 	public static final int BROJ_LINIJA_ISPITA = 5;
 	private static final int BROJ_LINIJA_OBRAZOVNIH_USTANOVA = 6;
@@ -55,11 +57,11 @@ public class GlavnaDatoteke {
 
 		List<Profesor> profesori = dohvatiProfesore();
 //		serijalizirajProfesore(profesori);
-		List<Predmet> predmeti = dohvatiPredmete(profesori);
 		List<Student> studenti = dohvatiStudente();
+		List<Predmet> predmeti = dohvatiPredmete(profesori, studenti);
 		List<Ispit> ispiti = dohvatiIspite(predmeti, studenti);
 
-		Sveuciliste sveuciliste = dohvatiSveuciliste(profesori, predmeti, studenti, ispiti);
+		Sveuciliste<ObrazovnaUstanova> sveuciliste = dohvatiSveuciliste(profesori, predmeti, studenti, ispiti);
 
 		List<ObrazovnaUstanova> lou = sveuciliste.getListaSveuciliste();
 
@@ -80,10 +82,16 @@ public class GlavnaDatoteke {
 
 				for (Predmet predmet : vj.getPredmeti()) {
 
-					System.out.println("Studenti upisani na predmet: " + predmet.getNaziv() + " su: ");
-					for (Student stud : predmet.getStudent()) {
-						System.out.println(stud.getIme() + " " + stud.getPrezime());
-					}
+//					System.out.println("Studenti upisani na predmet " + predmet.getNaziv() + " su: ");
+
+					System.out.printf("Studenti upisani na predmet %s su:%n", predmet.getNaziv());
+					predmet.getStudent().stream().sorted(new StudentSorter()).forEach(System.out::println);
+//					for (Student stud : predmet.getStudent()) {
+//						if (stud.getId().equals(predmet.getStudent())) {
+//							System.out.println(stud.getIme() + " " + stud.getPrezime());
+//
+//						}
+//					}
 				}
 
 				for (Student stud : vj.getStudenti()) {
@@ -101,11 +109,6 @@ public class GlavnaDatoteke {
 
 			}
 		}
-
-		listObrazovnaUstanova.getListaSveuciliste().stream().sorted().collect(Collectors.toCollection(LinkedList::new))
-				.stream().sorted((o1, o2) -> Integer.compare(o1.getStudenti().size(), o2.getStudenti().size()))
-				.forEach(s -> System.out.println("Sortirane obrazovne ustanove prema broju studenata: \n" + s.getNaziv()
-						+ ": Broj studenta: " + s.getStudenti().size()));
 
 //		listObrazovnaUstanova.getListaSveuciliste().stream()
 //				.sorted((o1, o2) -> Integer.compare(o1.getStudenti().size(), o2.getStudenti().size()))
@@ -179,7 +182,7 @@ public class GlavnaDatoteke {
 
 	}
 
-	public static List<Predmet> dohvatiPredmete(List<Profesor> profesori) {
+	public static List<Predmet> dohvatiPredmete(List<Profesor> profesori, List<Student> studenti) {
 
 		System.out.println("Ucitavanje predmeta...");
 
@@ -202,6 +205,15 @@ public class GlavnaDatoteke {
 			Integer brojEctsBodova = Integer.parseInt(listaStringova.get((i * BROJ_LINIJA_PREDMETA) + 3));
 			Long nositeljPredmetaInt = Long.parseLong(listaStringova.get((i * BROJ_LINIJA_PREDMETA) + 4));
 			Integer brojStudenata = Integer.parseInt(listaStringova.get((i * BROJ_LINIJA_PREDMETA) + 5));
+
+			String FKStudenata = listaStringova.get((i * (BROJ_LINIJA_PREDMETA)) + 6);
+
+			Set<Student> setStudenata = new HashSet<Student>();
+			String[] str = FKStudenata.split(" ");
+			for (String id : str) {
+				// myListPredmet.add(predmeti.get(Integer.parseInt(id)));
+				setStudenata.add(studenti.stream().filter(p -> p.getId().equals(Long.parseLong(id))).findFirst().get());
+			}
 
 			Profesor nositeljPredmeta = profesori.stream().filter(p -> p.getId().equals(nositeljPredmetaInt))
 					.findFirst().get();
