@@ -52,7 +52,7 @@ public interface Visokoskolska {
 
 		for (int i = 0; i < ispiti.size(); i++) {
 			if (ispiti.get(i).getOcjena() > 1) {
-				brojacPozitivnihOcjena++;
+				brojacPozitivnihOcjena = brojacPozitivnihOcjena + 1;
 
 			}
 		}

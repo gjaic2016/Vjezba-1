@@ -97,6 +97,8 @@ public class GlavnaDatoteke {
 				FakultetRacunalstva fr = (FakultetRacunalstva) ou;
 
 				fr.odrediNajuspjesnijegStudentaNaGodini(GODINA);
+				fr.odrediStudentaZaRektorovuNagradu();
+
 			}
 		}
 
